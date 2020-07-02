@@ -15,7 +15,8 @@ var storage = multer.diskStorage({
   }
 });
 
-var upload = multer({ storage : storage }).
+var upload = multer({ storage : storage }).single('userPhoto');
+
 app.use(cors());
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -28,8 +29,14 @@ app.get('/hello', function(req, res){
 });
 
 app.post("/api/fileanalyse", (req, res) => {
-  
-})
+  upload(req, res, (err) => {
+    console.log(res.originalname);
+    if (err) {
+      return res.send("Error uploading");
+    }
+    res.send({"filename": res.originalname, sizeFile: res.size});
+  });
+});
 
 app.listen(process.env.PORT || 3000, function () {
   console.log('Node.js listening ...');
