@@ -27,12 +27,11 @@ app.get('/hello', function(req, res){
 
 app.post("/api/fileanalyse", (req, res) => {
   upload(req, res, (err, data) => {
-    console.log(res.originalname);
     if (err) {
       console.log(err);
       return res.send("Error uploading");
     }
-    res.send({"filename": data.upfile.originalname, sizeFile: data.size});
+    res.send({ nameFile: req.file.filename, sizeFile: req.file.size });
   });
 });
 
