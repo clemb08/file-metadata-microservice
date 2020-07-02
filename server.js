@@ -7,15 +7,12 @@ const multer = require('multer');
 var app = express();
 
 var storage = multer.diskStorage({
-  destination: (req, file, done) => {
-    done(null, file)
-  },
   filename: (req, file, done) =>{
     done(null, file.fieldname)
   }
 });
 
-var upload = multer({ storage : storage }).single('userPhoto');
+var upload = multer({ storage : storage }).single('upfile');
 
 app.use(cors());
 app.use('/public', express.static(process.cwd() + '/public'));
@@ -29,12 +26,13 @@ app.get('/hello', function(req, res){
 });
 
 app.post("/api/fileanalyse", (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, (err, data) => {
     console.log(res.originalname);
     if (err) {
+      console.log(err);
       return res.send("Error uploading");
     }
-    res.send({"filename": res.originalname, sizeFile: res.size});
+    res.send({"filename": data.upfile.originalname, sizeFile: data.size});
   });
 });
 
